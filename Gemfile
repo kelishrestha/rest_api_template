@@ -42,6 +42,8 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec'
   gem 'rubycritic', require: false
+  # Auto generating schema information in model file
+  gem 'annotate'
 end
 
 group :test do

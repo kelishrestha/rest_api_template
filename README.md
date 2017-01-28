@@ -62,6 +62,13 @@ This application is used for building rails API apps.
 
     bundle exec rails c
 
+### How to use annotate gem
+---------------------------------------------------
+
+    For generating schema information in model file
+
+    annotate --exclude tests,fixtures,factories,serializers
+
 ### Services (job queues, cache servers, search engines, etc.)
 ---------------------------------------------------
 
