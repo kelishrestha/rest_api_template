@@ -65,7 +65,7 @@ This application is used for building rails API apps.
 ### How to use annotate gem
 ---------------------------------------------------
 
-    For generating schema information in model file
+For generating schema information in model file
 
     annotate --exclude tests,fixtures,factories,serializers
 
