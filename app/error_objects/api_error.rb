@@ -39,5 +39,6 @@ class APIError < StandardError
   }.freeze
 end
 
+# Service Response Error Class
 class ServiceResponseError < StandardError
 end
