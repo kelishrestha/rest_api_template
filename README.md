@@ -5,8 +5,8 @@ This application is used for building rails API apps.
 
 ## Technology
 
-1. Ruby v2.3.1
-2. Rails v5.0
+1. Ruby v2.4.0
+2. Rails v5.1
 3. Rails API
 
 ## Setup
