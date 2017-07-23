@@ -257,6 +257,10 @@ GEM
     websocket-driver (0.6.5-java)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    yt (0.32.0)
+      activesupport
+      yt-support (>= 0.1)
+    yt-support (0.1.2)
 
 PLATFORMS
   java
@@ -288,6 +292,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  yt
 
 BUNDLED WITH
    1.15.3
