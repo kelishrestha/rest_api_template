@@ -1,7 +1,7 @@
 Rest API template
 =========
 
-This application is used for building rails API apps.
+A sample rails api project.
 
 ## Technology
 
