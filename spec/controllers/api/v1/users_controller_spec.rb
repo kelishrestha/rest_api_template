@@ -215,4 +215,84 @@ describe Api::V1::UsersController, type: :api do
       end
     end
   end
+
+  describe '#index' do
+    subject(:get_user) { get "api/v1/users" }
+
+    let(:api_key) { FactoryGirl.create(:api_key) }
+
+    before do
+      header 'x-api-token', api_key.token
+      header 'Content-type', 'application/json'
+    end
+
+    context 'when there are no user' do
+      include_examples 'Validate Response', 200, 'returns empty list' do
+        let(:response_body) { [] }
+      end
+    end
+
+    context 'when users are present' do
+      let(:user_1_uid) { Faker::Code.asin }
+      let(:user_2_uid) { Faker::Code.asin }
+
+      let(:user_1_attributes) do
+        {
+          uid: user_1_uid,
+          first_name: 'Yosano',
+          last_name: 'Suzume',
+          dob: '1992-12-01',
+          image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+          married: false,
+          age: 20,
+          email: 'suzume.yosano@hnr.com'
+        }
+      end
+      let(:user_2_attributes) do
+        {
+          uid: user_2_uid,
+          first_name: 'Daiki',
+          last_name: 'Mamura',
+          dob: '1992-12-01',
+          image: 'https://i.pinimg.com/736x/3f/9d/f4/3f9df48174e0f6d7ba84d50cea92105c--hot-anime-anime-guys.jpg',
+          married: false,
+          age: 20,
+          email: 'mamura.daiki@hnr.com'
+        }
+      end
+
+      let(:user_1) { FactoryGirl.create(:user, user_1_attributes) }
+      let(:user_2) { FactoryGirl.create(:user, user_2_attributes) }
+
+      before do
+        user_1
+        user_2
+      end
+
+      include_examples 'Validate Response', 200, 'returns empty list' do
+        let(:response_body) do
+          [
+            {
+              id: user_1_uid,
+              name: 'Yosano Suzume',
+              dob: '1992-12-01T00:00:00Z',
+              image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+              married: false,
+              age: 20,
+              email: 'suzume.yosano@hnr.com'
+            },
+            {
+              id: user_2_uid,
+              name: 'Daiki Mamura',
+              dob: '1992-12-01T00:00:00Z',
+              image: 'https://i.pinimg.com/736x/3f/9d/f4/3f9df48174e0f6d7ba84d50cea92105c--hot-anime-anime-guys.jpg',
+              married: false,
+              age: 20,
+              email: 'mamura.daiki@hnr.com'
+            }
+          ]
+        end
+      end
+    end
+  end
 end

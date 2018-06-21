@@ -4,7 +4,7 @@ module Api
   module V1
     # Users controller
     class UsersController < BaseController
-      before_action :validate_schema, except: [:show, :destroy]
+      before_action :validate_schema, except: [:show, :destroy, :index]
       before_action :find_user, except: [:create, :index]
 
       def create
@@ -14,6 +14,11 @@ module Api
 
       def show
         render json: @user, status: 200
+      end
+
+      def index
+        users = User.all
+        render json: users, status: 200
       end
 
       private
