@@ -22,7 +22,8 @@ describe SchemaValidatorForm do
           dob: '1992-12-01',
           image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
           married: false,
-          age: 20
+          age: 20,
+          email: 'suzume.yosano@hnr.com'
         }
       end
 
@@ -40,7 +41,8 @@ describe SchemaValidatorForm do
           dob: '1992-12-01',
           image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
           married: false,
-          age: 20
+          age: 20,
+          email: 'suzume.yosano@hnr.com'
         }
       end
       let(:error_message) do
