@@ -27,7 +27,6 @@ module Api
       end
 
       def handle_exception(excp)
-        notify_error(excp)
         render APIError.new(500, '', request, excp).render_json
       end
 
@@ -38,6 +37,13 @@ module Api
       def valid_token?
         token = request.env['HTTP_X_API_TOKEN']
         ApiKey.valid_token?(token)
+      end
+
+      # Schema Validation
+      def validate_schema
+        controller_params = { controller_name: controller_name, action_name: action_name }
+        valid, error = SchemaValidatorForm.new(params, controller_params).validate
+        api_error(422, JSON.parse(error.message)) unless valid
       end
     end
   end
