@@ -9,7 +9,7 @@ module Api
 
       def create
         user = CreateUser.new(create_params).call
-        render json: user, status: 200
+        render json: user, status: 201
       end
 
       def show
@@ -21,6 +21,11 @@ module Api
         render json: users, status: 200
       end
 
+      def update
+        user = UpdateUser.new(@user, update_params).call
+        render json: user, status: 200
+      end
+
       private
 
       def create_params
@@ -29,6 +34,10 @@ module Api
 
       def user_params
         params.permit(:uid)
+      end
+
+      def update_params
+        params.permit(:first_name, :last_name, :age, :married, :image, :email)
       end
 
       def find_user

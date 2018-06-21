@@ -3,15 +3,126 @@
 require 'rails_helper'
 
 describe Api::V1::UsersController, type: :api do
+  before do
+    api_key = FactoryGirl.create(:api_key)
+    header 'x-api-token', api_key.token
+    header 'Content-type', 'application/json'
+  end
+
+  shared_context 'when required user parameters are missing' do
+    context 'when first name is missing' do
+      let(:request_body) { base_params.except(:first_name) }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'first_name', message: 'is missing' }
+          ]
+        end
+      end
+    end
+
+    context 'when last name is missing' do
+      let(:request_body) { base_params.except(:last_name) }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'last_name', message: 'is missing' }
+          ]
+        end
+      end
+    end
+
+    context 'when age is missing' do
+      let(:request_body) { base_params.except(:age) }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'age', message: 'is missing' }
+          ]
+        end
+      end
+    end
+
+    context 'when image url is missing' do
+      let(:request_body) { base_params.except(:image) }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'image', message: 'is missing' }
+          ]
+        end
+      end
+    end
+
+    context 'when email is missing' do
+      let(:request_body) { base_params.except(:email) }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'email', message: 'is missing' }
+          ]
+        end
+      end
+    end
+  end
+
+  shared_context 'when provided user parameters are invalid' do
+    context 'when user name is blank' do
+      let(:request_body) { base_params.merge(first_name: '') }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'first_name', message: 'must be a non-blank string' }
+          ]
+        end
+      end
+    end
+
+    context 'when dob is invalid date' do
+      let(:request_body) { base_params.merge(dob: '67890') }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'dob', message: 'must be a valid iso8601 date' }
+          ]
+        end
+      end
+    end
+
+    context 'when age is other than integer' do
+      let(:request_body) { base_params.merge(age: '20') }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'age', message: 'must be a non-zero number' }
+          ]
+        end
+      end
+    end
+
+    context 'when married is other than boolean' do
+      let(:request_body) { base_params.merge(married: 'unmarried') }
+
+      include_examples 'Validation Failure' do
+        let(:error_block) do
+          [
+            { field: 'married', message: 'must be a boolean' }
+          ]
+        end
+      end
+    end
+  end
+
   describe '#create' do
     subject(:create_user) { post 'api/v1/users', request_body.to_json }
-
-    let(:api_key) { FactoryGirl.create(:api_key) }
-
-    before do
-      header 'x-api-token', api_key.token
-      header 'Content-type', 'application/json'
-    end
 
     let(:base_params) do
       {
@@ -27,117 +138,8 @@ describe Api::V1::UsersController, type: :api do
 
     let(:request_body) { base_params }
 
-    context 'when required user parameters are missing' do
-      context 'when first name is missing' do
-        let(:request_body) { base_params.except(:first_name) }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'first_name', message: 'is missing' }
-            ]
-          end
-        end
-      end
-
-      context 'when last name is missing' do
-        let(:request_body) { base_params.except(:last_name) }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'last_name', message: 'is missing' }
-            ]
-          end
-        end
-      end
-
-      context 'when age is missing' do
-        let(:request_body) { base_params.except(:age) }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'age', message: 'is missing' }
-            ]
-          end
-        end
-      end
-
-      context 'when image url is missing' do
-        let(:request_body) { base_params.except(:image) }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'image', message: 'is missing' }
-            ]
-          end
-        end
-      end
-
-      context 'when email is missing' do
-        let(:request_body) { base_params.except(:email) }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'email', message: 'is missing' }
-            ]
-          end
-        end
-      end
-    end
-
-    context 'when provided user parameters are invalid' do
-      context 'when user name is blank' do
-        let(:request_body) { base_params.merge(first_name: '') }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'first_name', message: 'must be a non-blank string' }
-            ]
-          end
-        end
-      end
-
-      context 'when dob is invalid date' do
-        let(:request_body) { base_params.merge(dob: '67890') }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'dob', message: 'must be a valid iso8601 date' }
-            ]
-          end
-        end
-      end
-
-      context 'when age is other than integer' do
-        let(:request_body) { base_params.merge(age: '20') }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'age', message: 'must be a non-zero number' }
-            ]
-          end
-        end
-      end
-
-      context 'when married is other than boolean' do
-        let(:request_body) { base_params.merge(married: 'unmarried') }
-
-        include_examples 'Validation Failure' do
-          let(:error_block) do
-            [
-              { field: 'married', message: 'must be a boolean' }
-            ]
-          end
-        end
-      end
-    end
+    include_context 'when required user parameters are missing'
+    include_context 'when provided user parameters are invalid'
 
     context 'when provided user parameters are valid' do
       let(:user_response) do
@@ -156,21 +158,14 @@ describe Api::V1::UsersController, type: :api do
         expect { create_user }.to change { User.count }.by(1)
       end
 
-      include_examples 'Serving a Resource', 'user' do
-        let(:response_body) { user_response.with_indifferent_access }
+      include_examples 'Successfully Created', 'user' do
+        let(:response_body) { user_response.to_json }
       end
     end
   end
 
   describe '#show' do
     subject(:get_user) { get "api/v1/users/#{user_id}" }
-
-    let(:api_key) { FactoryGirl.create(:api_key) }
-
-    before do
-      header 'x-api-token', api_key.token
-      header 'Content-type', 'application/json'
-    end
 
     let(:user_id) { Faker::Code.asin }
 
@@ -218,13 +213,6 @@ describe Api::V1::UsersController, type: :api do
 
   describe '#index' do
     subject(:get_user) { get "api/v1/users" }
-
-    let(:api_key) { FactoryGirl.create(:api_key) }
-
-    before do
-      header 'x-api-token', api_key.token
-      header 'Content-type', 'application/json'
-    end
 
     context 'when there are no user' do
       include_examples 'Validate Response', 200, 'returns empty list' do
@@ -291,6 +279,74 @@ describe Api::V1::UsersController, type: :api do
               email: 'mamura.daiki@hnr.com'
             }
           ]
+        end
+      end
+    end
+  end
+
+  describe '#update' do
+    subject(:update_user) { put "api/v1/users/#{user_id}", request_body.to_json }
+
+    let(:user_id) { Faker::Code.asin }
+    let(:base_params) do
+      {
+        age: 25,
+        email: 'suzume.yosano@gmail.com'
+      }
+    end
+
+    let(:request_body) { base_params }
+
+    context 'when user does not exist' do
+      include_examples 'Resource not found', 'user' do
+        let(:error_message) { 'user not found' }
+      end
+    end
+
+    context 'when user exists' do
+      let(:user_attributes) do
+        {
+          uid: user_id,
+          first_name: 'Suzume',
+          last_name: 'Yosano',
+          dob: '1992-12-01',
+          image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+          married: false,
+          age: 20,
+          email: 'suzume.yosano@hnr.com'
+        }
+      end
+      let(:user) { FactoryGirl.create(:user, user_attributes) }
+
+      before { user }
+
+      include_context 'when provided user parameters are invalid'
+
+      context 'when provided user parameters are valid' do
+        let(:user_body) { JSON.parse(update_user.body) }
+
+        let(:user_response) do
+          {
+            id: user_id,
+            name: 'Suzume Yosano',
+            dob: '1992-12-01T00:00:00Z',
+            image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+            married: false,
+            age: 25,
+            email: 'suzume.yosano@gmail.com'
+          }
+        end
+
+        it "updates user's age" do
+          expect(user_body['age']).to eq(25)
+        end
+
+        it "updates user's email" do
+          expect(user_body['email']).to eq('suzume.yosano@gmail.com')
+        end
+
+        include_examples 'Serving a Resource', 'user' do
+          let(:response_body) { user_response.with_indifferent_access }
         end
       end
     end
