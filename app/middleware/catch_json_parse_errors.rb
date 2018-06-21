@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Middleware for json parsing
 class CatchJsonParseErrors
   def initialize(app)

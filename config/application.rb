@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'boot'
 
 require 'rails'
@@ -17,14 +18,13 @@ require 'rails/test_unit/railtie'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module RailsApiTemplate
+module RestApiTemplate
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     Dir["#{Rails.root}/lib/**/*.rb"].each { |f| require(f) }
     Dir["#{Rails.root}/app/middleware/*.rb"].each { |f| require(f) }
-    require "#{Rails.root}/config/initializers/config"
     Dir["#{Rails.root}/app/error_objects/*.rb"].each { |f| require(f) }
 
     # Only loads a smaller set of middleware suitable for API only apps.

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Assign unique id for model
 module RandomAlphaNumeric
   def assign_unique_id(field: :uid)

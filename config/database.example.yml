@@ -11,7 +11,7 @@ development:
   encoding: UTF8
   username: postgres
   password:
-  database: rails_api_development
+  database: rest_api_development
 
 test:
   <<: *defaults
@@ -19,7 +19,7 @@ test:
   encoding: UTF8
   username: postgres
   password:
-  database: rails_api_test
+  database: rest_api_test
 
 production:
   <<: *defaults
