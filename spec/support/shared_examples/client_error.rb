@@ -20,17 +20,32 @@ RSpec.shared_examples 'Validation Failure' do
   end
 end
 
-# 400 Error
+# 404 Error
 RSpec.shared_examples 'Resource not found' do |resource|
   let(:error_message) { '' }
   let(:subject_status) { subject.status }
-  let(:parsed_body) { subject.parsed_body }
+  let(:parsed_subject) { subject.parsed_body }
 
   it 'responds with 404 code' do
     expect(subject_status).to eq(404)
   end
 
   it "responds with #{resource} not found error" do
-    expect(parsed_body['message']).to eq(error_message)
+    expect(parsed_subject['message']).to eq(error_message)
+  end
+end
+
+# 403 Error
+RSpec.shared_examples 'Forbidden request' do
+  let(:error_message) { '' }
+  let(:subject_status) { subject.status }
+  let(:parsed_subject) { subject.parsed_body }
+
+  it 'responds with 403 code' do
+    expect(subject_status).to eq(403)
+  end
+
+  it 'responds with forbidden message' do
+    expect(parsed_subject['message']).to eq(error_message)
   end
 end
