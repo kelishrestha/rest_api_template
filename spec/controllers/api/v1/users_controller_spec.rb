@@ -161,4 +161,58 @@ describe Api::V1::UsersController, type: :api do
       end
     end
   end
+
+  describe '#show' do
+    subject(:get_user) { get "api/v1/users/#{user_id}" }
+
+    let(:api_key) { FactoryGirl.create(:api_key) }
+
+    before do
+      header 'x-api-token', api_key.token
+      header 'Content-type', 'application/json'
+    end
+
+    let(:user_id) { Faker::Code.asin }
+
+    context 'when user does not exist' do
+      include_examples 'Resource not found', 'user' do
+        let(:error_message) { 'user not found' }
+      end
+    end
+
+    context 'when user exists' do
+      let(:user_attributes) do
+        {
+          uid: user_id,
+          first_name: 'Suzume',
+          last_name: 'Yosano',
+          dob: '1992-12-01',
+          image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+          married: false,
+          age: 20,
+          email: 'suzume.yosano@hnr.com'
+        }
+      end
+
+      let(:user) do
+        FactoryGirl.create(:user, user_attributes)
+      end
+
+      before { user }
+
+      include_examples 'Serving a Resource', 'user' do
+        let(:response_body) do
+          {
+            id: user_id,
+            name: 'Suzume Yosano',
+            dob: '1992-12-01T00:00:00Z',
+            image: 'http://pm1.narvii.com/6282/0592a2f2698b13caa17546344c9e9553071aea7a_00.jpg',
+            married: false,
+            age: 20,
+            email: 'suzume.yosano@hnr.com'
+          }.with_indifferent_access
+        end
+      end
+    end
+  end
 end

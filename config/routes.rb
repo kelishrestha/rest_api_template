@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/status', to: 'base#status'
 
-      resources :users
+      resources :users, param: :uid
     end
   end
 end
