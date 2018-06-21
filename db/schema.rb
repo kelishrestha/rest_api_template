@@ -10,16 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102150019) do
+ActiveRecord::Schema.define(version: 2018_06_21_170002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "api_keys", force: :cascade do |t|
-    t.json     "app_info",   default: {}, null: false
-    t.string   "token",                   null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.json "app_info", default: {}, null: false
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "uid"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "image"
+    t.datetime "dob"
+    t.integer "age"
+    t.boolean "married"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_users_on_uid"
   end
 
 end

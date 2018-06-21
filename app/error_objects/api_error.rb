@@ -43,3 +43,7 @@ end
 # Service Response Error Class
 class ServiceResponseError < StandardError
 end
+
+# Internal Server Errors
+class ServerError < StandardError
+end
