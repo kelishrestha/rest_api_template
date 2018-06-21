@@ -26,6 +26,11 @@ module Api
         render json: user, status: 200
       end
 
+      def destroy
+        api_error(500) unless @user.destroy!
+        head :no_content
+      end
+
       private
 
       def create_params

@@ -212,7 +212,7 @@ describe Api::V1::UsersController, type: :api do
   end
 
   describe '#index' do
-    subject(:get_user) { get "api/v1/users" }
+    subject(:list_users) { get "api/v1/users" }
 
     context 'when there are no user' do
       include_examples 'Validate Response', 200, 'returns empty list' do
@@ -347,6 +347,53 @@ describe Api::V1::UsersController, type: :api do
 
         include_examples 'Serving a Resource', 'user' do
           let(:response_body) { user_response.with_indifferent_access }
+        end
+      end
+    end
+  end
+
+  describe '#destroy' do
+    subject(:destroy_user) { delete "api/v1/users/#{user_id}" }
+
+    let(:user_id) { Faker::Code.asin }
+
+    context 'when user does not exist' do
+      include_examples 'Resource not found', 'user' do
+        let(:error_message) { 'user not found' }
+      end
+    end
+
+    context 'when user exists' do
+      let(:user) do
+        FactoryGirl.create(:user, uid: user_id)
+      end
+
+      before { user }
+
+      context 'and delete operation is successful' do
+        it 'deletes user' do
+          expect { destroy_user }.to change { User.count }.by(-1)
+        end
+
+        include_examples 'Success with no content', 'user'
+      end
+
+      context 'and delete operation is unsuccessful' do
+        before do
+          allow(User).to receive(:find_by).with(uid: user_id).and_return(user)
+          allow(user).to receive(:destroy!).and_raise('ActiveRecord::RecordNotFound')
+        end
+
+        it 'does not delete user' do
+          expect { destroy_user }.to change { User.count }.by(0)
+        end
+
+        include_examples 'Validate Response', 500, 'returns internal server error' do
+          let(:response_body) do
+            {
+              message: 'Internal server error'
+            }
+          end
         end
       end
     end
