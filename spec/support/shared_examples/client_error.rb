@@ -5,7 +5,7 @@ RSpec.shared_examples 'Validation Failure' do
   let(:subject_status) { subject.status }
   let(:parsed_body) { subject.parsed_body }
   let(:error_message) { 'Validation Failed' }
-  let(:errors) { [] }
+  let(:error_block) { [] }
 
   it 'responds with 422 code' do
     expect(subject_status).to eq(422)
@@ -16,7 +16,7 @@ RSpec.shared_examples 'Validation Failure' do
   end
 
   it 'responds with fieldwise error message block' do
-    expect(parsed_body['errors']).to eq(errors.map(&:with_indifferent_access))
+    expect(parsed_body['errors']).to eq(error_block.map(&:with_indifferent_access))
   end
 end
 
