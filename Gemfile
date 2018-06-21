@@ -24,6 +24,9 @@ gem 'puma', '~> 3.0'
 # gem 'rack-cors'
 
 gem 'httparty'
+gem 'json-schema',
+    git: 'git@github.com:cloudfactory/json-schema.git',
+    branch: 'date_check'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
